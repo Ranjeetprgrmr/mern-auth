@@ -32,11 +32,18 @@ export const signin = async (req, res, next) => {
     const { password: hashedPassword, ...otherDetails } = validUser._doc;
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // expires in 1 day
     res
-      .cookie("access_token", token, { httpOnly: true, expires })
       .status(200)
-      .json(otherDetails);
-
-    res.status(200).json({ message: "User signed in successfully!" });
+      .cookie("access_token", token, {
+        httpOnly: true,
+        expires,
+        sameSite: "none",
+        secure: true,
+      })
+      .json({
+        message: "User signed in successfully!",
+        ...otherDetails,
+      });
+    // res.status(200).json({ message: "User signed in successfully!" });
   } catch (error) {
     next(error);
     // next(errorHandler(300, "something went wrong. Please try again!"));
