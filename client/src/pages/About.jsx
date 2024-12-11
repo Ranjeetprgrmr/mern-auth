@@ -12,6 +12,7 @@ export default function About() {
         library for building interactive user interfaces. Node.js: A JavaScript
         runtime that allows server-side scripting. 
         <hr/>
+        <h2 className="text-xl font-bold mt-4">Redux</h2>
         Redux is a predictable state
         container for JavaScript apps, often used with React to manage the
         application's state in a central store. It helps maintain consistent
