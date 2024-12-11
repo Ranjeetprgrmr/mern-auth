@@ -68,6 +68,7 @@ export const google = async (req, res, next) => {
         .json({
           message: "User signed in successfully!",
           ...otherDetails,
+          profilePicture: user.profilePicture,
         });
     } else {
       const generatePassword =
@@ -97,7 +98,9 @@ export const google = async (req, res, next) => {
         .json({
           message: "User signed in successfully!",
           ...otherDetails,
+          profilePicture: newUser.profilePicture,
         });
+        
     }
   } catch (error) {
     next(error);

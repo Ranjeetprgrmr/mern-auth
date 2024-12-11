@@ -11,12 +11,14 @@ export default function Profile() {
   const fileRef = useRef(null);
   const [image, setImage] = useState("");
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+  console.log(formData);
 
   useEffect(() => {
     const storedImage = localStorage.getItem("image");
@@ -38,7 +40,6 @@ export default function Profile() {
     reader.readAsDataURL(file);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,6 +57,7 @@ export default function Profile() {
         return;
       }
       dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error));
     }
@@ -75,24 +77,11 @@ export default function Profile() {
           hidden
         />
         <img
-          src={image}
-          alt="profile"
+          src={image || currentUser.profilePicture}
+          alt="select profile picture"
           className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
           onClick={() => fileRef.current.click()}
         />
-        {/* <p className="text-sm self-center">
-          {imageError ? (
-            <span className="text-red-500">Error uploading image</span>
-          ) : imagePercent > 0 && imagePercent < 100 ? (
-            <span className="text-slate-700">
-              {`Uploading: ${imagePercent} % `}
-            </span>
-          ) : imagePercent === 100 ? (
-            <span className="text-green-700">Image uploaded successfully</span>
-          ) : (
-            ""
-          )}
-        </p> */}
 
         <input
           defaultValue={currentUser.username}
@@ -115,15 +104,22 @@ export default function Profile() {
           id="password"
           placeholder="Password"
           className="bg-slate-100 rounded-lg p-3"
+          onChange={handleChange}
         />
         <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95  disabled:opacity-80">
-          Update
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-500 cursor-pointer">Delete Account</span>
-        <span className="text-red-500 cursor-pointer">Sign Up</span>
+        <span className="text-red-700 text-bolder cursor-pointer">
+          Delete Account
+        </span>
+        <span className="text-red-700 text-bolder cursor-pointer">
+          Sign Out
+        </span>
       </div>
+      <p className="text-red-500 mt-5">{error && 'Something went wrong. Please try again!'}</p>
+      <p className="text-green-500 mt-5">{updateSuccess && "Profile updated successfully!"}</p>
     </div>
   );
 }
