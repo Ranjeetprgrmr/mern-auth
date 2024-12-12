@@ -27,13 +27,17 @@ export default function OAuth() {
           const data = await res.json();
           // console.log(data);
           dispatch(signInSuccess(data));
+          document.getElementById('auth-button').addEventListener('click', () => {
+            authWithGoogle();
+          });
           navigate('/');
         }catch(error) {
             console.log("could not login with google");
         }
     }
+
   return (
-    <button type='button' onClick={handleGoogleClick} className='bg-red-700 text-white rounded-lg p-3 uppercase hover:opacity-95'>
+    <button type='button' id="auth-button" onClick={handleGoogleClick} className='bg-red-700 text-white rounded-lg p-3 uppercase hover:opacity-95'>
       Continue with google
     </button>
   )
